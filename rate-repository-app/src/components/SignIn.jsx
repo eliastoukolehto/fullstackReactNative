@@ -1,8 +1,9 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput as NativeTextInput, View } from 'react-native';
 import Text from './Text';
 import theme from './theme';
+import TextInput from './TextInput';
 
 const styles = StyleSheet.create({
   container: {
@@ -59,22 +60,28 @@ const SignIn = () => {
     onSubmit
   })
 
+  errorStatusPassword = formik.touched.password && formik.errors.password
+  errorStatusUsername = formik.touched.username && formik.errors.username
+
   return(
     <View style={styles.container}>
       <TextInput
-        style={styles.input}
         placeholder='Username'
-        value={formik.values.username}
-        onChangeText={formik.handleChange('username')}
+        formik={formik}
+        formikValue={formik.values.username}
+        value='username'
+        errorStatus={errorStatusUsername}
+        secureTextEntry={false}
       />
       {formik.touched.username && formik.errors.username && (
         <Text style={styles.errorText}>{formik.errors.username}</Text>
       )}
       <TextInput
-        style={styles.input}
         placeholder='Password'
-        value={formik.values.password}
-        onChangeText={formik.handleChange('password')}
+        value='password'
+        formik={formik}
+        formikValue={formik.values.password}
+        errorStatus={errorStatusPassword}
         secureTextEntry={true}
       />
       {formik.touched.password && formik.errors.password && (

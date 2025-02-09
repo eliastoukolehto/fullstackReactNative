@@ -1,6 +1,5 @@
-import { TextInput as NativeTextInput } from "react-native";
-
-//TODO - figure out conditional styles
+import { TextInput as NativeTextInput, StyleSheet } from "react-native";
+import theme from "./theme";
 
 const styles = StyleSheet.create({
   input: {
@@ -10,22 +9,34 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: theme.colors.textSecondary
   },
+  errorInput: {
+    padding: 15,
+    margin: 5,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: theme.colors.error
+  }
 })
 
 const TextInput = (props) => {
-  
 
-  return (
-    <View>
-      <NativeTextInput
+  if (props.errorStatus) {
+  return <NativeTextInput
+         style={styles.errorInput}
+         placeholder={props.placeholder}
+         value={props.formikValue}
+         onChangeText={props.formik.handleChange(props.value)}
+         secureTextEntry={props.secureTextEntry}
+       />
+  } else {
+      return <NativeTextInput
         style={styles.input}
         placeholder={props.placeholder}
-        value={formik.values.username}
-        onChangeText={props.handleChange(props.value)}
+        value={props.formikValue}
+        onChangeText={props.formik.handleChange(props.value)}
+        secureTextEntry={props.secureTextEntry}
       />
-      
-    </View>
-  )
+  }
 }
 
 export default TextInput;
