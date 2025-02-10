@@ -1,9 +1,11 @@
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import { Pressable, StyleSheet, TextInput as NativeTextInput, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import Text from './Text';
 import theme from './theme';
 import TextInput from './TextInput';
+import useSignIn from '../hooks/useSignIn';
+import { useNavigate } from 'react-router-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -49,9 +51,18 @@ const initialValues = {
 }
 
 const SignIn = () => {
-  const onSubmit = values => {
-    console.log('username: '+ values.username)
-    console.log('password: '+ values.password)
+  const [signIn, result] = useSignIn();
+  const navigate = useNavigate();
+
+  const onSubmit = async (values) => {
+    const { username, password } = values;
+
+    try {
+      const { data } = await signIn({ username, password })
+      navigate('/')
+    } catch (error) {
+      console.log('error: '+error)
+    }
   }
 
   const formik = useFormik({
