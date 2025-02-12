@@ -13,22 +13,13 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   input: {
-    padding: 15,
-    margin: 5,
-    borderWidth: 1,
-    borderRadius: 5,
-    borderColor: theme.colors.textSecondary
+    ...theme.inputField
   },
   submit: {
-    padding: 15,
-    margin: 5,
-    borderRadius: 5,
-    backgroundColor: theme.colors.primary,
+    ...theme.submitButton
   },
   submitText: {
-    color: theme.colors.appBarText,
-    fontWeight: theme.fontWeights.bold,
-    textAlign: 'center',
+    ...theme.submitText
   },
   errorText: {
     color: theme.colors.error,
@@ -65,6 +56,11 @@ const SignIn = () => {
     }
   }
 
+  return <SignInContainer onSubmit={onSubmit}/>
+
+};
+
+export const SignInContainer = ({ onSubmit }) => {
   const formik = useFormik({
     initialValues, 
     validationSchema,
@@ -103,6 +99,6 @@ const SignIn = () => {
       </Pressable>
     </View>
   )
-};
+}
 
 export default SignIn;

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from "react-native"
+import { Image, Linking, Pressable, StyleSheet, View } from "react-native"
 import theme from "./theme";
 import Text from "./Text";
 
@@ -55,6 +55,12 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItem = ({ item }) => {
+
+  const handleGitHubLink = () => {
+    Linking.openURL(item.url)
+  }
+
+
   const reduceNumber = ( number ) => {
     switch (true) {
       case number >= 10000:
@@ -65,18 +71,19 @@ const RepositoryItem = ({ item }) => {
         return `${number}`;
     }
   }
+
   const stars = reduceNumber(item.stargazersCount)
   const forks = reduceNumber(item.forksCount)
 
   return (
-    <View style={styles.container}>
-        <View style={styles.topContainer}>
-          <Image style={styles.avatar} source={{uri: item.ownerAvatarUrl}}/>
-          <View style={styles.mainInfoContainer}>
-            <Text style={styles.name}>{item.fullName}</Text>
-            <Text style={styles.description}>{item.description}</Text>
-            <Text style={styles.languageContainer}>{item.language}</Text>
-          </View>
+    <View style={styles.container} testID="repositoryItem">
+      <View style={styles.topContainer}>
+        <Image style={styles.avatar} source={{uri: item.ownerAvatarUrl}}/>
+        <View style={styles.mainInfoContainer}>
+          <Text style={styles.name}>{item.fullName}</Text>
+          <Text style={styles.description}>{item.description}</Text>
+          <Text style={styles.languageContainer}>{item.language}</Text>
+        </View>
       </View>
 
       <View style={styles.bottomContainer}>
@@ -97,6 +104,10 @@ const RepositoryItem = ({ item }) => {
           <Text style={styles.statName}>Rating</Text>
         </View>
       </View>
+      {item.url &&
+      <Pressable style={theme.submitButton} onPress={handleGitHubLink}>
+        <Text style={theme.submitText}>Open in GitHub</Text>
+      </Pressable>}
     </View>
   )
 }
