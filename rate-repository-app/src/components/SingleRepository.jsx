@@ -55,6 +55,7 @@ const ReviewItem = ({ review }) => {
       <View style={styles.rating}>
         <Text style={styles.ratingText}>{review.rating}</Text>
       </View>
+      <View style={styles.separator} />
       <View style={styles.reviewContainer}>
         <Text style={styles.usernameText}>{review.user.username}</Text>
         <Text style={styles.dateText}>{date}</Text>

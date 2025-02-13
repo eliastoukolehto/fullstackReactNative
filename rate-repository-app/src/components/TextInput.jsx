@@ -18,23 +18,17 @@ const styles = StyleSheet.create({
   }
 })
 
-const TextInput = (props) => {
+const TextInput = ({ errorStatus, ...props}) => {
 
-  if (props.errorStatus) {
+  if (errorStatus) {
   return <NativeTextInput
-         style={styles.errorInput}
-         placeholder={props.placeholder}
-         value={props.formikValue}
-         onChangeText={props.formik.handleChange(props.value)}
-         secureTextEntry={props.secureTextEntry}
+        style={styles.errorInput}
+        {...props}
        />
   } else {
       return <NativeTextInput
         style={styles.input}
-        placeholder={props.placeholder}
-        value={props.formikValue}
-        onChangeText={props.formik.handleChange(props.value)}
-        secureTextEntry={props.secureTextEntry}
+        {...props}
       />
   }
 }

@@ -73,25 +73,24 @@ export const SignInContainer = ({ onSubmit }) => {
   return(
     <View style={styles.container}>
       <TextInput
-        placeholder='Username'
-        formik={formik}
-        formikValue={formik.values.username}
-        value='username'
         errorStatus={errorStatusUsername}
-        secureTextEntry={false}
+        placeholder='Username'
+        value={formik.values.username}
+        onChangeText={formik.handleChange('username')}
+        placeholderTextColor={theme.colors.textSecondary}
       />
-      {formik.touched.username && formik.errors.username && (
+      {errorStatusUsername && (
         <Text style={styles.errorText}>{formik.errors.username}</Text>
       )}
       <TextInput
-        placeholder='Password'
-        value='password'
-        formik={formik}
-        formikValue={formik.values.password}
         errorStatus={errorStatusPassword}
+        placeholder='Password'
+        value={formik.values.password}
+        onChangeText={formik.handleChange('password')}
+        placeholderTextColor={theme.colors.textSecondary}
         secureTextEntry={true}
       />
-      {formik.touched.password && formik.errors.password && (
+      {errorStatusPassword && (
         <Text style={styles.errorText}>{formik.errors.password}</Text>
       )}
       <Pressable style={styles.submit} onPress={formik.handleSubmit}>

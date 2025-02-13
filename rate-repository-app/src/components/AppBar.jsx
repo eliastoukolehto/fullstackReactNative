@@ -51,17 +51,31 @@ const AppBar = () => {
             <Text style={styles.text}>Repositories</Text>
           </Link>
         </Pressable>
+       
         {!user &&
+        <View style={{ flexDirection: 'row' }}>
           <Pressable>
             <Link to="/signin">
               <Text style={styles.text}>Sign In</Text>
             </Link>
           </Pressable>
-        } 
+          <Pressable>
+            <Link to="/signup">
+              <Text style={styles.text}>Sign Up</Text>
+            </Link>
+          </Pressable>
+        </View>} 
         {user &&
+        <View style={{ flexDirection: 'row' }}>
+          <Pressable>
+            <Link to="/review">
+              <Text style={styles.text}>Create a review</Text>
+            </Link>
+          </Pressable>
           <Pressable onPress={signOut}>
               <Text style={styles.text}>Sign Out</Text>
-          </Pressable>}
+          </Pressable>
+        </View>}
       </ScrollView>
     </View>
     
