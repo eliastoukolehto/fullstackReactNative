@@ -2,6 +2,10 @@ import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from 'react-router-native';
+import { Picker } from '@react-native-picker/picker';
+import { useState } from 'react';
+import { Searchbar } from 'react-native-paper';
+import { useDebounce } from 'use-debounce'
 
 const styles = StyleSheet.create({
   separator: {
@@ -11,13 +15,49 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories }) => {
+const RepositoryFilter = ({ filter, setFilter }) => {
+  return (
+    <Searchbar 
+      placeholder='Filter repositories'
+      value={filter}
+      onChangeText={setFilter}
+    />
+  )
+}
+
+const RepositorySorter = ({ order, setOrder }) => {
+
+  return (
+    <View>
+      <Picker
+      selectedValue={order}
+      onValueChange={(itemValue, itemIndex) => 
+        setOrder(itemValue)
+      }>
+        <Picker.Item label='Latest repositories' value='latest' />
+        <Picker.Item label='Highest rated repositories' value='highestRated' />
+        <Picker.Item label='Lowest rated repositories' value='lowestRated' />
+      </Picker>
+    </View>
+  )
+}
+
+const RenderHeader = ({filter, setFilter, order, setOrder}) => {
+
+  return (
+    <View>
+      <RepositoryFilter filter={filter} setFilter={setFilter} />
+      <RepositorySorter order={order} setOrder={setOrder}/>
+    </View>
+  )
+}
+
+export const RepositoryListContainer = ({ repositories, order, setOrder, filter, setFilter }) => {
   const navigate = useNavigate()
 
   const handleRepositoryPageLink = (itemId) => {
     navigate(`/${itemId}`)
   }
-
 
   const repositoryNodes = repositories
   ? repositories.edges.map(edge => edge.node)
@@ -33,6 +73,7 @@ export const RepositoryListContainer = ({ repositories }) => {
             <RepositoryItem item={item}/>
           </Pressable>}
         keyExtractor={item => item.id}
+        ListHeaderComponent={<RenderHeader filter={filter} setFilter={setFilter} order={order} setOrder={setOrder}/>}
       />
     </View>
   );
@@ -40,11 +81,20 @@ export const RepositoryListContainer = ({ repositories }) => {
 }
 
 const RepositoryList = () => {
+  const [orderBySelection, setOrderBySelection] = useState()
+  const [filter, setFilter] = useState('')
+  const [debouncedFilter] = useDebounce(filter, 1000)
+  const { repositories, loading } = useRepositories(orderBySelection, debouncedFilter);
 
-  const { repositories, loading } = useRepositories();
-
-  return <RepositoryListContainer repositories={repositories} />;
+  return <RepositoryListContainer 
+    repositories={repositories} 
+    order={orderBySelection} 
+    setOrder={setOrderBySelection} 
+    filter={filter}
+    setFilter={setFilter}/>;
 
 };
+
+
 
 export default RepositoryList;
