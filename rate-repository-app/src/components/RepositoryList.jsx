@@ -52,12 +52,14 @@ const RenderHeader = ({filter, setFilter, order, setOrder}) => {
   )
 }
 
-export const RepositoryListContainer = ({ repositories, order, setOrder, filter, setFilter }) => {
+export const RepositoryListContainer = ({ repositories, order, setOrder, filter, setFilter, onEndReached }) => {
   const navigate = useNavigate()
 
   const handleRepositoryPageLink = (itemId) => {
     navigate(`/${itemId}`)
   }
+
+
 
   const repositoryNodes = repositories
   ? repositories.edges.map(edge => edge.node)
@@ -67,6 +69,8 @@ export const RepositoryListContainer = ({ repositories, order, setOrder, filter,
     <View>
       <FlatList
         data={repositoryNodes}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({item}) => 
           <Pressable onPress={() => handleRepositoryPageLink(item.id)}>
@@ -81,17 +85,25 @@ export const RepositoryListContainer = ({ repositories, order, setOrder, filter,
 }
 
 const RepositoryList = () => {
+  const first = 4
+
   const [orderBySelection, setOrderBySelection] = useState()
   const [filter, setFilter] = useState('')
   const [debouncedFilter] = useDebounce(filter, 1000)
-  const { repositories, loading } = useRepositories(orderBySelection, debouncedFilter);
+  const { repositories, loading, fetchMore } = useRepositories(first, orderBySelection, debouncedFilter);
+
+  const onEndReached = () => {
+    console.log('fetching more...')
+    fetchMore()
+  }
 
   return <RepositoryListContainer 
     repositories={repositories} 
     order={orderBySelection} 
     setOrder={setOrderBySelection} 
     filter={filter}
-    setFilter={setFilter}/>;
+    setFilter={setFilter}
+    onEndReached={onEndReached}/>;
 
 };
 

@@ -32,12 +32,14 @@ const AppBar = () => {
   const authStorage = useAuthStorage()
   const apolloClient = useApolloClient()
   const { data, loading } = useQuery(GET_USER)
+  const navigate = useNavigate()
   const user = data?.me
   //console.log('data: ' +JSON.stringify(data))
 
 
   const signOut = async () => {
     await authStorage.removeAccessToken()
+    navigate('/')
     apolloClient.resetStore();
   }
 
@@ -70,6 +72,11 @@ const AppBar = () => {
           <Pressable>
             <Link to="/review">
               <Text style={styles.text}>Create a review</Text>
+            </Link>
+          </Pressable>
+          <Pressable>
+            <Link to="/userreviews">
+              <Text style={styles.text}>My reviews</Text>
             </Link>
           </Pressable>
           <Pressable onPress={signOut}>

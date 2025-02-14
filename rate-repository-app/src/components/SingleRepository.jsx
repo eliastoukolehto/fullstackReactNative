@@ -66,8 +66,16 @@ const ReviewItem = ({ review }) => {
 };
 
 const SingleRepository = () => {
+  const first = 2
+
   const { repositoryId } = useParams();
-  const { repository, loading } = useRepository(repositoryId)
+  const { repository, loading, fetchMore } = useRepository(repositoryId, first)
+
+  const onEndReached = () => {
+    console.log('fetching more reviews...')
+    fetchMore()
+  }
+
 
   if (loading || !repository) return(
     <View>
@@ -86,6 +94,7 @@ const SingleRepository = () => {
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => <RepositoryItem item={repository} />}
+      onEndReached={onEndReached}
     />
   )
 }  

@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.itemBackground,
     padding: 15,
+    flexDirection: 'column'
   },
   input: {
     ...theme.inputField

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { GET_REPOSITORIES } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 
-const useRepositories = ( orderBySelection, filter ) => {
+const useRepositories = ( first, orderBySelection, filter ) => {
 
   const [orderBy, setOrderBy] = useState('CREATED_AT')
   const [orderDirection, setOrderDirection] = useState('DESC')
@@ -33,12 +33,34 @@ const useRepositories = ( orderBySelection, filter ) => {
     }
   }
 
-  const { data, loading } = useQuery(GET_REPOSITORIES, {
-    variables: {orderBy: orderBy, orderDirection: orderDirection, searchKeyword: filter},
+  const variables = {first: first, orderBy: orderBy, orderDirection: orderDirection, searchKeyword: filter}
+
+  const { data, loading, fetchMore } = useQuery(GET_REPOSITORIES, {
+    variables,
     fetchPolicy: 'cache-and-network'
   })
   
-  return { repositories: data?.repositories, loading }
-}
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+  
+  return {
+    repositories: data?.repositories,
+    fetchMore: handleFetchMore,
+    loading
+  };
+};
+
 
 export default useRepositories
